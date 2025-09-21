@@ -1,0 +1,3306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEO GEN</title>
+    <style>
+        /* Base styles and resets */
+        :root {
+            --primary: #FF9933; /* Saffron */
+            --primary-dark: #FF8C00; /* Darker saffron */
+            --secondary: #138808; /* Green */
+            --accent: #FF6B35; /* Orange accent */
+            --success: #138808; /* Green for success */
+            --warning: #FF9933; /* Saffron for warning */
+            --danger: #DC2626; /* Red for danger */
+            --light: #f8fafc;
+            --dark: #1e293b;
+            --gray: #64748b;
+            --gray-light: #e2e8f0;
+            --border-radius: 8px;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        [data-theme="dark"] {
+            --light: #1e293b;
+            --dark: #f8fafc;
+            --gray: #94a3b8;
+            --gray-light: #334155;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+        }
+
+        .dark-mode-toggle {
+            background: none;
+            border: 2px solid var(--primary);
+            border-radius: 50px;
+            padding: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            font-size: 1.5rem;
+        }
+
+        .dark-mode-toggle:hover {
+            background: var(--primary);
+            color: white;
+            transform: scale(1.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f9fafb;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            background-color: white;
+            box-shadow: var(--shadow);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        header.scrolled {
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        .logo img {
+            width: 40px;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--gray);
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        nav a:hover, nav a.active {
+            color: var(--primary);
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.5rem 1.5rem;
+            border-radius: var(--border-radius);
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: linear-gradient(135deg, #FF9933, #FF8C00);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 153, 51, 0.4);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #138808, #0F7A07);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(19, 136, 8, 0.4);
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, #FF9933, #FF8C00);
+            color: white;
+            font-weight: 700;
+            font-size: 1.1rem;
+            padding: 1rem 2.5rem;
+            border-radius: 12px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 15px rgba(255, 153, 51, 0.3);
+        }
+
+        .btn-submit:hover {
+            background: linear-gradient(135deg, #FF8C00, #FF6B35);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255, 153, 51, 0.5);
+        }
+
+        .btn-submit:active {
+            transform: translateY(-1px);
+        }
+
+        .btn {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        main {
+            padding: 2rem 0;
+            min-height: calc(100vh - 200px);
+            margin-top: 80px; /* Account for fixed header */
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #FF9933 0%, #FF6B35 25%, #FFFFFF 50%, #138808 75%, #0F7A07 100%);
+            color: #1e293b;
+            padding: 6rem 0;
+            border-radius: 20px;
+            margin-bottom: 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            min-height: 70vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(255, 153, 51, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(19, 136, 8, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(255, 107, 53, 0.2) 0%, transparent 50%);
+            z-index: 0;
+        }
+        
+        .hero::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="75" cy="75" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="50" cy="10" r="0.5" fill="rgba(255,255,255,0.05)"/><circle cx="10" cy="60" r="0.5" fill="rgba(255,255,255,0.05)"/><circle cx="90" cy="40" r="0.5" fill="rgba(255,255,255,0.05)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            opacity: 0.3;
+            z-index: 1;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        .hero h1, .hero p, .hero .search-container {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: #1e293b;
+        }
+
+        .search-container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .search-bar {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 50px;
+            padding: 8px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .search-input-group {
+            display: flex;
+            align-items: center;
+            gap: 0;
+        }
+
+        .search-input-group input {
+            flex: 1;
+            padding: 1rem 1.5rem;
+            border: none;
+            background: transparent;
+            font-size: 1.1rem;
+            outline: none;
+            color: #1e293b;
+        }
+
+        .search-input-group input::placeholder {
+            color: #64748b;
+        }
+
+        .search-btn {
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            font-size: 1.1rem;
+            white-space: nowrap;
+            background: linear-gradient(135deg, #138808, #0F7A07);
+            border: none;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .search-btn:hover {
+            background: linear-gradient(135deg, #0F7A07, #0A5D05);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(19, 136, 8, 0.4);
+        }
+
+        .search-btn svg {
+            transition: transform 0.3s ease;
+        }
+
+        .search-btn:hover svg {
+            transform: scale(1.1);
+        }
+
+        /* Search and Filter Bar */
+        .search-filter-bar {
+            background: var(--light);
+            padding: 1.5rem;
+            border-radius: 16px;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+        }
+
+        .search-input-container {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .search-input-container input {
+            flex: 1;
+            padding: 1rem 1.5rem;
+            border: 2px solid var(--gray-light);
+            border-radius: 12px;
+            font-size: 1rem;
+            background: white;
+        }
+
+        .search-input-container input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(255, 153, 51, 0.1);
+        }
+
+        .filter-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .filter-container select {
+            padding: 0.75rem 1rem;
+            border: 2px solid var(--gray-light);
+            border-radius: 12px;
+            background: white;
+            font-size: 0.9rem;
+        }
+
+        .filter-container select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .section {
+            background-color: white;
+            border-radius: 20px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 1rem 1.25rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 1rem;
+            background: #f8fafc;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: white;
+            box-shadow: 0 0 0 3px rgba(255, 153, 51, 0.1);
+        }
+
+        select {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 0.75rem center;
+            background-repeat: no-repeat;
+            background-size: 1.5em 1.5em;
+            padding-right: 2.5rem;
+            appearance: none;
+            cursor: pointer;
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            min-width: 150px;
+        }
+
+        .checkbox-item:hover {
+            background: #f1f5f9;
+            border-color: var(--primary);
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin: 0;
+            accent-color: var(--primary);
+            cursor: pointer;
+        }
+
+        .checkbox-item input[type="checkbox"]:checked + label {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .checkbox-item:has(input[type="checkbox"]:checked) {
+            background: rgba(255, 153, 51, 0.1);
+            border-color: var(--primary);
+        }
+
+        .file-upload {
+            border: 3px dashed #e2e8f0;
+            padding: 3rem 2rem;
+            text-align: center;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #f8fafc;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .file-upload:hover {
+            border-color: var(--primary);
+            background: rgba(255, 153, 51, 0.05);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 153, 51, 0.15);
+        }
+
+        .file-upload.dragover {
+            border-color: var(--primary);
+            background: rgba(255, 153, 51, 0.1);
+            transform: scale(1.02);
+        }
+
+        .file-upload-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+            display: block;
+        }
+
+        .file-upload h4 {
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .file-upload p {
+            color: var(--gray);
+            margin: 0.5rem 0;
+            font-size: 0.95rem;
+        }
+
+        .file-upload .upload-hint {
+            color: var(--primary);
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .internship-card {
+            border: 1px solid var(--gray-light);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .internship-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow);
+        }
+
+        .internship-image {
+            height: 160px;
+            background-color: var(--gray-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .internship-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .internship-content {
+            padding: 1.5rem;
+        }
+
+        .internship-title {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+        }
+
+        .internship-org {
+            color: var(--primary);
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .internship-details {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+
+        .internship-details span {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .internship-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .tag {
+            background-color: var(--gray-light);
+            padding: 0.25rem 0.5rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+
+        .tag-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .notifications-list {
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .notification-item {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .notification-item:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        .notification-item.deadline {
+            border-left: 4px solid #ef4444;
+            background: linear-gradient(135deg, #fef2f2 0%, #ffffff 100%);
+        }
+
+        .notification-item.deadline::before {
+            content: 'URGENT';
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: #ef4444;
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .notification-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .notification-date {
+            font-size: 0.85rem;
+            color: var(--gray);
+            background: #f1f5f9;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-weight: 500;
+        }
+
+        .notification-title {
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: var(--dark);
+            font-size: 1.1rem;
+            line-height: 1.4;
+        }
+
+        .notification-message {
+            color: var(--gray);
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+
+        .notification-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1rem;
+        }
+
+        .read-more-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .read-more-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+
+        .countdown-timer {
+            background: #ef4444;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .countdown-timer.warning {
+            background: #f59e0b;
+        }
+
+        .countdown-timer.danger {
+            background: #dc2626;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .profile-section {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 2rem;
+        }
+
+        .profile-sidebar {
+            background-color: var(--light);
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+        }
+
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: bold;
+            margin: 0 auto 1rem;
+        }
+
+        .profile-name {
+            text-align: center;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .profile-detail {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--gray-light);
+        }
+
+        .profile-detail:last-child {
+            border-bottom: none;
+        }
+
+        footer {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            color: white;
+            padding: 3rem 0 2rem;
+            margin-top: 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(255, 153, 51, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(19, 136, 8, 0.1) 0%, transparent 50%);
+            z-index: 0;
+        }
+
+        .footer-content {
+            position: relative;
+            z-index: 1;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 3rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-section {
+            text-align: left;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 1.5rem;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .footer-section h3::before {
+            content: '';
+            width: 4px;
+            height: 20px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 2px;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-links a {
+            color: #cbd5e1;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-block;
+            padding: 0.25rem 0;
+            position: relative;
+        }
+
+        .footer-links a::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            transition: width 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: white;
+            transform: translateX(5px);
+        }
+
+        .footer-links a:hover::before {
+            width: 100%;
+        }
+
+        .footer-description {
+            color: #94a3b8;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            margin-top: 2rem;
+            border-top: 1px solid #334155;
+            color: #94a3b8;
+            font-size: 0.9rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        @media (max-width: 768px) {
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+                text-align: center;
+            }
+
+            .footer-section {
+                text-align: center;
+            }
+
+            .footer-section h3 {
+                justify-content: center;
+            }
+        }
+
+        /* Modal styles */
+        .modal-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            visibility: hidden;
+            opacity: 0;
+            transition: all 0.3s;
+        }
+
+        .modal-backdrop.active {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .modal {
+            background-color: white;
+            border-radius: var(--border-radius);
+            width: 100%;
+            max-width: 500px;
+            padding: 2rem;
+            position: relative;
+            transform: translateY(-20px);
+            transition: transform 0.3s;
+        }
+
+        .modal-backdrop.active .modal {
+            transform: translateY(0);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray);
+        }
+
+        .modal-title {
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+        }
+
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            nav ul {
+                gap: 1rem;
+            }
+            
+            .profile-section {
+                grid-template-columns: 1fr;
+            }
+            
+            .results-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero h2 {
+                font-size: 2rem !important;
+            }
+
+            .hero p {
+                font-size: 1.1rem !important;
+            }
+
+            .search-input-group {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .search-input-group input {
+                border-radius: 25px;
+                border: 1px solid #e2e8f0;
+                background: white;
+            }
+
+            .search-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Catbot Styles */
+        .catbot-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .catbot-toggle {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #FF9933, #138808);
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            transition: all 0.3s ease;
+        }
+
+        .catbot-toggle:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+        }
+
+        .catbot-window {
+            position: absolute;
+            bottom: 70px;
+            right: 0;
+            width: 350px;
+            height: 450px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .catbot-window.active {
+            display: flex;
+        }
+
+        .catbot-header {
+            background: linear-gradient(135deg, #FF9933, #138808);
+            color: white;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .catbot-avatar {
+            width: 40px;
+            height: 40px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .catbot-info h3 {
+            margin: 0;
+            font-size: 16px;
+        }
+
+        .catbot-info p {
+            margin: 0;
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        .catbot-close {
+            margin-left: auto;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .catbot-messages {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            background: #f8fafc;
+        }
+
+        .message {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .message.user {
+            flex-direction: row-reverse;
+        }
+
+        .message-avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .message.bot .message-avatar {
+            background: linear-gradient(135deg, #FF9933, #138808);
+            color: white;
+        }
+
+        .message.user .message-avatar {
+            background: #e2e8f0;
+            color: #1e293b;
+        }
+
+        .message-content {
+            max-width: 80%;
+            padding: 10px 15px;
+            border-radius: 15px;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .message.bot .message-content {
+            background: white;
+            border: 1px solid #e2e8f0;
+        }
+
+        .message.user .message-content {
+            background: linear-gradient(135deg, #FF9933, #138808);
+            color: white;
+        }
+
+        .catbot-input {
+            padding: 15px;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            gap: 10px;
+        }
+
+        .catbot-input input {
+            flex: 1;
+            padding: 10px 15px;
+            border: 1px solid #e2e8f0;
+            border-radius: 25px;
+            outline: none;
+            font-size: 14px;
+        }
+
+        .catbot-input input:focus {
+            border-color: #FF9933;
+        }
+
+        .catbot-send {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #FF9933, #138808);
+            border: none;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .catbot-send:hover {
+            transform: scale(1.05);
+        }
+
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 10px 15px;
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 15px;
+            max-width: 80%;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #FF9933;
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+            0%, 60%, 100% {
+                transform: translateY(0);
+            }
+            30% {
+                transform: translateY(-10px);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .catbot-window {
+                width: 300px;
+                height: 400px;
+            }
+        }
+
+        /* Resources Section Styles */
+        .resources-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .resource-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 20px;
+            padding: 2rem;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .resource-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            border-color: transparent;
+        }
+
+        .resource-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .resource-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .resource-icon {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            display: block;
+            text-align: center;
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+            transition: transform 0.3s ease;
+        }
+
+        .resource-card:hover .resource-icon {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .resource-card h3 {
+            color: var(--dark);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+            font-weight: 700;
+            text-align: center;
+            transition: color 0.3s ease;
+        }
+
+        .resource-card:hover h3 {
+            color: var(--primary);
+        }
+
+        .resource-card p {
+            color: var(--gray);
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+            text-align: center;
+            font-size: 0.95rem;
+        }
+
+        .resource-card ul {
+            list-style: none;
+            margin-bottom: 2rem;
+            flex-grow: 1;
+        }
+
+        .resource-card ul li {
+            padding: 0.5rem 0;
+            color: var(--dark);
+            position: relative;
+            padding-left: 1.5rem;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+
+        .resource-card ul li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--success);
+            font-weight: bold;
+            font-size: 1rem;
+        }
+
+        .resource-card:hover ul li {
+            color: var(--primary);
+        }
+
+        .resource-card .btn {
+            width: 100%;
+            margin-top: auto;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border: none;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .resource-card .btn:hover {
+            background: linear-gradient(135deg, var(--primary-dark), var(--secondary));
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 153, 51, 0.3);
+        }
+
+        .quick-links {
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--gray-light);
+        }
+
+        .quick-links h3 {
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .links-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1.5rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .quick-link {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            padding: 1.5rem 1rem;
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 16px;
+            text-decoration: none;
+            color: var(--dark);
+            transition: all 0.3s ease;
+            min-height: 120px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .quick-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .quick-link:hover::before {
+            transform: scaleX(1);
+        }
+
+        .quick-link:hover {
+            background: linear-gradient(135deg, #fef7f0, #ffffff);
+            border-color: var(--primary);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(255, 153, 51, 0.15);
+        }
+
+        .link-icon {
+            font-size: 2.5rem;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+        }
+
+        .quick-link:hover .link-icon {
+            transform: scale(1.1) rotate(5deg);
+            background: linear-gradient(135deg, rgba(255, 153, 51, 0.1), rgba(19, 136, 8, 0.1));
+        }
+
+        .quick-link span:last-child {
+            font-weight: 600;
+            font-size: 0.95rem;
+            line-height: 1.3;
+        }
+
+        @media (max-width: 768px) {
+            .resources-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .links-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+            }
+
+            .resource-card {
+                padding: 1.5rem;
+            }
+
+            .resource-icon {
+                font-size: 3rem;
+            }
+
+            .resource-card h3 {
+                font-size: 1.2rem;
+            }
+
+            .quick-link {
+                min-height: 100px;
+                padding: 1rem 0.5rem;
+            }
+
+            .link-icon {
+                font-size: 2rem;
+                width: 40px;
+                height: 40px;
+            }
+
+            .quick-link span:last-child {
+                font-size: 0.85rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .links-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .resources-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 1025px) {
+            .resources-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        /* Testimonials Slider */
+        .testimonials-slider {
+            position: relative;
+            overflow: hidden;
+            border-radius: 16px;
+        }
+
+        .testimonials-container {
+            display: flex;
+            transition: transform 0.5s ease;
+            gap: 2rem;
+        }
+
+        .testimonial-card {
+            min-width: 100%;
+            background: white;
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .testimonial-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin-bottom: 1rem;
+            border: 4px solid var(--primary);
+        }
+
+        .testimonial-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .testimonial-content h4 {
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+        }
+
+        .testimonial-role {
+            color: var(--primary);
+            font-weight: 600;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .testimonial-text {
+            color: var(--gray);
+            line-height: 1.6;
+            margin-bottom: 1rem;
+            font-style: italic;
+        }
+
+        .testimonial-rating {
+            font-size: 1.2rem;
+        }
+
+        .slider-controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .slider-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .slider-btn:hover {
+            background: var(--primary-dark);
+            transform: scale(1.1);
+        }
+
+        /* Contact Form */
+        .contact-container {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 3rem;
+            margin-top: 2rem;
+        }
+
+        .contact-form {
+            background: var(--light);
+            padding: 2rem;
+            border-radius: 16px;
+        }
+
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.5rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+        }
+
+        .contact-icon {
+            font-size: 2rem;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 12px;
+            color: white;
+        }
+
+        .contact-item h4 {
+            color: var(--dark);
+            margin-bottom: 0.25rem;
+        }
+
+        .contact-item p {
+            color: var(--gray);
+            margin: 0;
+        }
+
+        @media (max-width: 768px) {
+            .contact-container {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .testimonials-container {
+                gap: 1rem;
+            }
+
+            .testimonial-card {
+                padding: 1.5rem;
+            }
+
+            .search-filter-bar {
+                padding: 1rem;
+            }
+
+            .search-input-container {
+                flex-direction: column;
+            }
+
+            .filter-container {
+                grid-template-columns: 1fr;
+            }
+
+            .resources-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .links-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .notifications-list {
+                grid-template-columns: 1fr;
+            }
+
+            .hero h2 {
+                font-size: 1.8rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .search-input-group {
+                flex-direction: column;
+            }
+
+            .search-btn {
+                width: 100%;
+                margin-top: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .section {
+                padding: 1.5rem;
+                margin: 1rem;
+            }
+
+            .hero {
+                padding: 2rem 1rem;
+            }
+
+            .hero h2 {
+                font-size: 1.5rem;
+            }
+
+            .testimonial-card {
+                padding: 1rem;
+            }
+
+            .contact-item {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login/Signup Modal -->
+    <div class="modal-backdrop" id="authModal">
+        <div class="modal">
+            <button class="modal-close" id="closeAuthModal">&times;</button>
+            <h2 class="modal-title" id="authModalTitle">Login to Your Account</h2>
+            <form id="authForm">
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" required>
+                </div>
+                <div class="form-group hidden" id="confirmPasswordGroup">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <input type="password" id="confirmPassword">
+                </div>
+                <div class="form-group hidden" id="fullNameGroup">
+                    <label for="fullName">Full Name</label>
+                    <input type="text" id="fullName">
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Continue</button>
+            </form>
+            
+            <!-- Google Sign-up Option -->
+            <div style="margin: 1.5rem 0; text-align: center;">
+                <div style="display: flex; align-items: center; margin-bottom: 1rem;">
+                    <hr style="flex: 1; border: none; height: 1px; background: #e2e8f0;">
+                    <span style="padding: 0 1rem; color: #64748b; font-size: 0.9rem;">or</span>
+                    <hr style="flex: 1; border: none; height: 1px; background: #e2e8f0;">
+                </div>
+                <button class="btn btn-outline" id="googleSignupBtn" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                    </svg>
+                    Continue with Google
+                </button>
+            </div>
+            
+            <p style="text-align: center; margin-top: 1rem;">
+                <span id="authSwitchText">Don't have an account?</span>
+                <a href="#" id="authSwitchLink">Sign up</a>
+            </p>
+        </div>
+    </div>
+
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 100 100">
+                        <!-- Black circle background -->
+                        <circle cx="50" cy="50" r="45" fill="#000000" stroke="#666666" stroke-width="2"/>
+                        
+                        <!-- Light blue circular outline -->
+                        <circle cx="50" cy="50" r="35" fill="none" stroke="#00BFFF" stroke-width="3" stroke-dasharray="20,10"/>
+                        
+                        <!-- Saffron swoosh -->
+                        <path d="M 20 60 Q 35 25 65 40 Q 75 50 80 35" stroke="#FF9933" stroke-width="8" fill="none" stroke-linecap="round"/>
+                        
+                        <!-- Green swoosh -->
+                        <path d="M 80 25 Q 65 50 35 35 Q 25 45 20 30" stroke="#138808" stroke-width="8" fill="none" stroke-linecap="round"/>
+                        
+                        <!-- NEO GEN text -->
+                        <text x="50" y="45" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="12" font-weight="bold">NEO</text>
+                        <text x="50" y="60" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="12" font-weight="bold">GEN</text>
+                    </svg>
+                    NEO GEN
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="#" class="active">🏠 Home</a></li>
+                        <li><a href="#find">🔍 Find Internships</a></li>
+                        <li><a href="#notifications">🔔 Notifications</a></li>
+                        <li><a href="#resources">📂 Resources</a></li>
+                        <li><a href="#profile">👤 Profile</a></li>
+                    </ul>
+                </nav>
+                <div class="auth-buttons">
+                    <button class="dark-mode-toggle" id="darkModeToggle">🌙</button>
+                    <button class="btn btn-outline" id="loginBtn">Login</button>
+                    <button class="btn btn-primary" id="signupBtn">Sign Up</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <section class="hero">
+                <div class="hero-content">
+                    <h1>NEO GEN
+                    </h1>
+                    <h2 style="font-size: 3rem; font-weight: 800; margin-bottom: 1.5rem; background: linear-gradient(135deg, #1e293b, #475569); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; line-height: 1.2;">
+                        Find Government Internships that Match Your Skills with AI-Powered Matching
+                    </h2>
+                    <p style="font-size: 1.3rem; margin-bottom: 3rem; color: #475569; font-weight: 500;">
+                        Discover your perfect government internship opportunity with our advanced AI technology
+                    </p>
+                    
+                    <!-- Search Container -->
+                    <div class="search-container">
+                        <div class="search-bar">
+                            <div class="search-input-group">
+                                <input type="text" placeholder="Enter your skills, department, or location..." id="heroSearchInput">
+                                <button class="btn btn-primary search-btn" id="heroSearchBtn">
+                                    <span>Find Internship</span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <circle cx="11" cy="11" r="8"></circle>
+                                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Dashboard Section (shown after login) -->
+            <section class="section hidden" id="dashboardSection">
+                <h2 class="section-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="3" width="7" height="9"></rect>
+                        <rect x="14" y="3" width="7" height="5"></rect>
+                        <rect x="14" y="12" width="7" height="9"></rect>
+                        <rect x="3" y="16" width="7" height="5"></rect>
+                    </svg>
+                    Dashboard
+                </h2>
+                <div class="profile-section">
+                    <div class="profile-sidebar">
+                        <div class="profile-avatar" id="userAvatar">JS</div>
+                        <h3 class="profile-name" id="userName">John Smith</h3>
+                        <div class="profile-detail">
+                            <span>Branch:</span>
+                            <span id="userBranch">Computer Science</span>
+                        </div>
+                        <div class="profile-detail">
+                            <span>Location:</span>
+                            <span id="userLocation">New Delhi</span>
+                        </div>
+                        <div class="profile-detail">
+                            <span>Status:</span>
+                            <span class="tag tag-primary">Active</span>
+                        </div>
+                    </div>
+                    <div>
+                        <h3>Your Recent Applications</h3>
+                        <p>You haven't applied to any internships yet. Start by finding opportunities that match your profile.</p>
+                        <button class="btn btn-primary" id="findInternshipsBtn">Find Internships</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Find Internships Section -->
+            <section class="section" id="findInternshipsSection">
+                <h2 class="section-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                    Find Your Perfect Internship
+                </h2>
+                <p>Tell us about yourself and let our AI match you with the best government internship opportunities.</p>
+                
+                <!-- Search and Filter Bar -->
+                <div class="search-filter-bar">
+                    <div class="search-input-container">
+                        <input type="text" id="internshipSearch" placeholder="Search internships by title, department, or keywords...">
+                        <button class="search-btn" id="searchBtn">🔍</button>
+                    </div>
+                    <div class="filter-container">
+                        <select id="locationFilter">
+                            <option value="">All Locations</option>
+                            <option value="delhi">Delhi</option>
+                            <option value="mumbai">Mumbai</option>
+                            <option value="bangalore">Bangalore</option>
+                            <option value="chennai">Chennai</option>
+                            <option value="hyderabad">Hyderabad</option>
+                        </select>
+                        <select id="durationFilter">
+                            <option value="">All Durations</option>
+                            <option value="1-3">1-3 months</option>
+                            <option value="3-6">3-6 months</option>
+                            <option value="6+">6+ months</option>
+                        </select>
+                        <select id="typeFilter">
+                            <option value="">All Types</option>
+                            <option value="technical">Technical</option>
+                            <option value="research">Research</option>
+                            <option value="policy">Policy</option>
+                            <option value="management">Management</option>
+                        </select>
+                        <select id="stipendFilter">
+                            <option value="">All Stipends</option>
+                            <option value="0-10000">₹0-10,000</option>
+                            <option value="10000-20000">₹10,000-20,000</option>
+                            <option value="20000+">₹20,000+</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <form id="internshipForm">
+                    <div class="form-group">
+                        <label for="branch">Your Branch/Field of Study</label>
+                        <select id="branch" required>
+                            <option value="">Select your branch</option>
+                            <option value="computer">Computer Science/IT</option>
+                            <option value="mechanical">Mechanical Engineering</option>
+                            <option value="electrical">Electrical Engineering</option>
+                            <option value="civil">Civil Engineering</option>
+                            <option value="biotech">Biotechnology</option>
+                            <option value="management">Business Management</option>
+                            <option value="economics">Economics</option>
+                            <option value="law">Law</option>
+                            <option value="medicine">Medicine</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Your Skills (Select all that apply)</label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="skill1" value="programming">
+                                <label for="skill1">Programming</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="skill2" value="data-analysis">
+                                <label for="skill2">Data Analysis</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="skill3" value="web-development">
+                                <label for="skill3">Web Development</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="skill4" value="design">
+                                <label for="skill4">Design</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="skill5" value="communication">
+                                <label for="skill5">Communication</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="skill6" value="research">
+                                <label for="skill6">Research</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="skill7" value="writing">
+                                <label for="skill7">Writing</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="skill8" value="leadership">
+                                <label for="skill8">Leadership</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="state">Preferred State</label>
+                        <select id="state" required>
+                            <option value="">Select state</option>
+                            <option value="delhi">Delhi</option>
+                            <option value="maharastra">Maharashtra</option>
+                            <option value="karnataka">Karnataka</option>
+                            <option value="tamilnadu">Tamil Nadu</option>
+                            <option value="kerala">Kerala</option>
+                            <option value="westbengal">West Bengal</option>
+                            <option value="gujarat">Gujarat</option>
+                            <option value="rajasthan">Rajasthan</option>
+                            <option value="any">Any</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="city">Preferred City (Optional)</label>
+                        <input type="text" id="city" placeholder="Enter city name">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Upload Your Resume</label>
+                        <div class="file-upload" id="resumeUpload">
+                            <div class="file-upload-icon">📄</div>
+                            <h4>Drop your resume here</h4>
+                            <p>or <span class="upload-hint">click to browse</span></p>
+                            <p>Supports: PDF, DOC, DOCX (Max 5MB)</p>
+                        </div>
+                        <input type="file" id="resumeFile" accept=".pdf,.doc,.docx" style="display: none;">
+                    </div>
+                    
+                    <button type="submit" class="btn btn-submit">Apply Now</button>
+                </form>
+                
+                <div class="results-grid hidden" id="resultsContainer">
+                    <!-- Results will be populated by JavaScript -->
+                </div>
+            </section>
+
+            <!-- Notifications Section -->
+            <section class="section" id="notificationsSection">
+                <h2 class="section-title">
+                    <span style="font-size: 1.5rem;">🔔</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                        <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                    </svg>
+                    Notifications
+                </h2>
+                <p>Stay updated with the latest government internship opportunities and announcements.</p>
+                
+                <ul class="notifications-list">
+                    <li class="notification-item">
+                        <div class="notification-header">
+                            <div class="notification-date">2 hours ago</div>
+                        </div>
+                        <h3 class="notification-title">New Internship Opportunities</h3>
+                        <p class="notification-message">5 new government internships have been posted matching your profile. Explore these exciting opportunities now!</p>
+                        <div class="notification-actions">
+                            <button class="read-more-btn">Read More</button>
+                        </div>
+                    </li>
+                    <li class="notification-item deadline">
+                        <div class="notification-header">
+                            <div class="notification-date">Yesterday</div>
+                        </div>
+                        <h3 class="notification-title">Application Deadline Reminder</h3>
+                        <p class="notification-message">The deadline for Ministry of Electronics & IT internship is approaching. Don't miss this opportunity!</p>
+                        <div class="notification-actions">
+                            <button class="read-more-btn">Read More</button>
+                            <div class="countdown-timer danger" id="deadlineTimer1">
+                                <span>⏰</span>
+                                <span id="timer1">2 days left</span>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="notification-item">
+                        <div class="notification-header">
+                            <div class="notification-date">3 days ago</div>
+                        </div>
+                        <h3 class="notification-title">Webinar Announcement</h3>
+                        <p class="notification-message">Join our webinar on "How to Ace Government Internship Interviews" and learn from industry experts.</p>
+                        <div class="notification-actions">
+                            <button class="read-more-btn">Read More</button>
+                        </div>
+                    </li>
+                    <li class="notification-item deadline">
+                        <div class="notification-header">
+                            <div class="notification-date">1 week ago</div>
+                        </div>
+                        <h3 class="notification-title">New Features Launched</h3>
+                        <p class="notification-message">We've improved our AI matching algorithm to provide better internship recommendations. Try it now!</p>
+                        <div class="notification-actions">
+                            <button class="read-more-btn">Read More</button>
+                            <div class="countdown-timer warning">
+                                <span>🎉</span>
+                                <span>New Feature</span>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="notification-item">
+                        <div class="notification-header">
+                            <div class="notification-date">2 weeks ago</div>
+                        </div>
+                        <h3 class="notification-title">Profile Update Required</h3>
+                        <p class="notification-message">Complete your profile to get better internship matches and increase your chances of selection.</p>
+                        <div class="notification-actions">
+                            <button class="read-more-btn">Update Profile</button>
+                        </div>
+                    </li>
+                    <li class="notification-item deadline">
+                        <div class="notification-header">
+                            <div class="notification-date">3 weeks ago</div>
+                        </div>
+                        <h3 class="notification-title">Final Reminder: NITI Aayog Application</h3>
+                        <p class="notification-message">Last chance to apply for the prestigious NITI Aayog internship program. Deadline is tomorrow!</p>
+                        <div class="notification-actions">
+                            <button class="read-more-btn">Apply Now</button>
+                            <div class="countdown-timer danger" id="deadlineTimer2">
+                                <span>🚨</span>
+                                <span id="timer2">1 day left</span>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </section>
+
+            <!-- Resources Section -->
+            <section class="section" id="resourcesSection">
+                <h2 class="section-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14,2 14,8 20,8"></polyline>
+                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                        <polyline points="10,9 9,9 8,9"></polyline>
+                    </svg>
+                    Resources & Guides
+                </h2>
+                <p>Everything you need to know about government internships, application processes, and career development.</p>
+                
+                <div class="resources-grid">
+                    <!-- Application Guide -->
+                    <div class="resource-card">
+                        <div class="resource-icon">📝</div>
+                        <h3>Application Guide</h3>
+                        <p>Step-by-step guide to applying for government internships</p>
+                        <ul>
+                            <li>How to write a compelling resume</li>
+                            <li>Cover letter templates</li>
+                            <li>Application checklist</li>
+                            <li>Common mistakes to avoid</li>
+                        </ul>
+                        <button class="btn">Read Guide</button>
+                    </div>
+
+                    <!-- Interview Tips -->
+                    <div class="resource-card">
+                        <div class="resource-icon">🎯</div>
+                        <h3>Interview Preparation</h3>
+                        <p>Master your government internship interviews</p>
+                        <ul>
+                            <li>Common interview questions</li>
+                            <li>Behavioral interview tips</li>
+                            <li>Technical interview prep</li>
+                            <li>Follow-up strategies</li>
+                        </ul>
+                        <button class="btn">View Tips</button>
+                    </div>
+
+                    <!-- Department Guide -->
+                    <div class="resource-card">
+                        <div class="resource-icon">🏛️</div>
+                        <h3>Department Overview</h3>
+                        <p>Learn about different government departments</p>
+                        <ul>
+                            <li>Ministry of Electronics & IT</li>
+                            <li>Ministry of Education</li>
+                            <li>NITI Aayog</li>
+                            <li>State Government opportunities</li>
+                        </ul>
+                        <button class="btn">Explore</button>
+                    </div>
+
+                    <!-- Skill Development -->
+                    <div class="resource-card">
+                        <div class="resource-icon">🚀</div>
+                        <h3>Skill Development</h3>
+                        <p>Enhance your skills for government roles</p>
+                        <ul>
+                            <li>Technical skills training</li>
+                            <li>Soft skills development</li>
+                            <li>Government-specific skills</li>
+                            <li>Certification programs</li>
+                        </ul>
+                        <button class="btn">Learn More</button>
+                    </div>
+
+                    <!-- Success Stories -->
+                    <div class="resource-card">
+                        <div class="resource-icon">⭐</div>
+                        <h3>Success Stories</h3>
+                        <p>Real experiences from successful interns</p>
+                        <ul>
+                            <li>Internship journey stories</li>
+                            <li>Career progression paths</li>
+                            <li>Lessons learned</li>
+                            <li>Advice from alumni</li>
+                        </ul>
+                        <button class="btn">Read Stories</button>
+                    </div>
+
+                    <!-- FAQ -->
+                    <div class="resource-card">
+                        <div class="resource-icon">❓</div>
+                        <h3>Frequently Asked Questions</h3>
+                        <p>Quick answers to common questions</p>
+                        <ul>
+                            <li>Eligibility requirements</li>
+                            <li>Stipend and benefits</li>
+                            <li>Duration and timing</li>
+                            <li>Application deadlines</li>
+                        </ul>
+                        <button class="btn">View FAQ</button>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div class="quick-links">
+                    <h3>Quick Links</h3>
+                    <div class="links-grid">
+                        <a href="#" class="quick-link">
+                            <span class="link-icon">📑</span>
+                            <span>Application Templates</span>
+                        </a>
+                        <a href="#" class="quick-link">
+                            <span class="link-icon">📅</span>
+                            <span>Important Dates</span>
+                        </a>
+                        <a href="#" class="quick-link">
+                            <span class="link-icon">☎</span>
+                            <span>Contact Support</span>
+                        </a>
+                        <a href="#" class="quick-link">
+                            <span class="link-icon">💬</span>
+                            <span>Community Forum</span>
+                        </a>
+                        <a href="#" class="quick-link">
+                            <span class="link-icon">📱</span>
+                            <span>Mobile App</span>
+                        </a>
+                        <a href="#" class="quick-link">
+                            <span class="link-icon">📧</span>
+                            <span>Newsletter</span>
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Success Stories Slider -->
+            <section class="section" id="successStoriesSection">
+                <h2 class="section-title">
+                    <span style="font-size: 1.5rem;">⭐</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="9" cy="7" r="4"></circle>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                    </svg>
+                    Success Stories
+                </h2>
+                <p>Hear from students who found their dream internships through NEO GEN</p>
+                
+                <div class="testimonials-slider">
+                    <div class="testimonials-container" id="testimonialsContainer">
+                        <div class="testimonial-card">
+                            <div class="testimonial-avatar">
+                                <img src="https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face" alt="Priya Sharma">
+                            </div>
+                            <div class="testimonial-content">
+                                <h4>Priya Sharma</h4>
+                                <p class="testimonial-role">Software Development Intern at Ministry of IT</p>
+                                <p class="testimonial-text">"NEO GEN helped me find the perfect internship that matched my skills. The AI matching was spot-on and I got selected for my dream role!"</p>
+                                <div class="testimonial-rating">⭐⭐⭐⭐⭐</div>
+                            </div>
+                        </div>
+                        
+                        <div class="testimonial-card">
+                            <div class="testimonial-avatar">
+                                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face" alt="Arjun Patel">
+                            </div>
+                            <div class="testimonial-content">
+                                <h4>Arjun Patel</h4>
+                                <p class="testimonial-role">Research Intern at NITI Aayog</p>
+                                <p class="testimonial-text">"The platform made it so easy to discover opportunities I never knew existed. The application process was smooth and I got great guidance throughout."</p>
+                                <div class="testimonial-rating">⭐⭐⭐⭐⭐</div>
+                            </div>
+                        </div>
+                        
+                        <div class="testimonial-card">
+                            <div class="testimonial-avatar">
+                                <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face" alt="Sneha Reddy">
+                            </div>
+                            <div class="testimonial-content">
+                                <h4>Sneha Reddy</h4>
+                                <p class="testimonial-role">Policy Research Intern at Ministry of Education</p>
+                                <p class="testimonial-text">"I was amazed by how well the AI understood my profile and suggested relevant internships. The resources section was incredibly helpful too!"</p>
+                                <div class="testimonial-rating">⭐⭐⭐⭐⭐</div>
+                            </div>
+                        </div>
+                        
+                        <div class="testimonial-card">
+                            <div class="testimonial-avatar">
+                                <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face" alt="Rahul Kumar">
+                            </div>
+                            <div class="testimonial-content">
+                                <h4>Rahul Kumar</h4>
+                                <p class="testimonial-role">Data Analysis Intern at Ministry of Health</p>
+                                <p class="testimonial-text">"The platform connected me with opportunities I would have never found otherwise. The support team was fantastic throughout the process."</p>
+                                <div class="testimonial-rating">⭐⭐⭐⭐⭐</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="slider-controls">
+                        <button class="slider-btn prev-btn" id="prevBtn">❮</button>
+                        <button class="slider-btn next-btn" id="nextBtn">❯</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Contact Form Section -->
+            <section class="section" id="contactSection">
+                <h2 class="section-title">
+                    <span style="font-size: 1.5rem;">📞</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                    </svg>
+                    Contact Us
+                </h2>
+                <p>Have questions? We're here to help! Reach out to us anytime.</p>
+                
+                <div class="contact-container">
+                    <div class="contact-form">
+                        <form id="contactForm">
+                            <div class="form-group">
+                                <label for="contactName">Full Name</label>
+                                <input type="text" id="contactName" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="contactEmail">Email Address</label>
+                                <input type="email" id="contactEmail" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="contactSubject">Subject</label>
+                                <input type="text" id="contactSubject" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="contactMessage">Message</label>
+                                <textarea id="contactMessage" rows="5" required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-submit">Send Message</button>
+                        </form>
+                    </div>
+                    <div class="contact-info">
+                        <div class="contact-item">
+                            <div class="contact-icon">📧</div>
+                            <div>
+                                <h4>Email Us</h4>
+                                <p>support@neogen.com</p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <div class="contact-icon">📞</div>
+                            <div>
+                                <h4>Call Us</h4>
+                                <p>+91-XXXX-XXXX</p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <div class="contact-icon">💬</div>
+                            <div>
+                                <h4>Live Chat</h4>
+                                <p>Available 24/7</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">🏠 Home</a></li>
+                        <li><a href="#find">🔍 Find Internships</a></li>
+                        <li><a href="#notifications">🔔 Notifications</a></li>
+                        <li><a href="#resources">📂 Resources</a></li>
+                        <li><a href="#profile">👤 Profile</a></li>
+                        <li><a href="#">📑 Application Templates</a></li>
+                        <li><a href="#">📅 Important Dates</a></li>
+                        <li><a href="#">☎ Contact Support</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Resources</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">📝 Application Guide</a></li>
+                        <li><a href="#">🎯 Interview Preparation</a></li>
+                        <li><a href="#">🏛️ Department Overview</a></li>
+                        <li><a href="#">🚀 Skill Development</a></li>
+                        <li><a href="#">⭐ Success Stories</a></li>
+                        <li><a href="#">❓ FAQ</a></li>
+                        <li><a href="#">💬 Community Forum</a></li>
+                        <li><a href="#">📱 Mobile App</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Government Partners</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">🏛️ Ministry of Education</a></li>
+                        <li><a href="#">💻 Ministry of Electronics & IT</a></li>
+                        <li><a href="#">📊 NITI Aayog</a></li>
+                        <li><a href="#">🏢 State Governments</a></li>
+                        <li><a href="#">🏭 Public Sector Units</a></li>
+                        <li><a href="#">🔬 Research Organizations</a></li>
+                        <li><a href="#">🏥 Health Ministry</a></li>
+                        <li><a href="#">🌱 Environment Ministry</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                © 2025 Neo Gen by Ankish. All Rights Reserved.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Catbot -->
+    <div class="catbot-container">
+        <button class="catbot-toggle" id="catbotToggle">🐱</button>
+        <div class="catbot-window" id="catbotWindow">
+            <div class="catbot-header">
+                <div class="catbot-avatar">🐱</div>
+                <div class="catbot-info">
+                    <h3>NEO Catbot</h3>
+                    <p>Your friendly AI assistant</p>
+                </div>
+                <button class="catbot-close" id="catbotClose">&times;</button>
+            </div>
+            <div class="catbot-messages" id="catbotMessages">
+                <div class="message bot">
+                    <div class="message-avatar">🐱</div>
+                    <div class="message-content">
+                        Meow! I'm NEO Catbot, your friendly AI assistant! 🐾<br>
+                        I can help you with:
+                        <br>• Finding internships
+                        <br>• Answering questions about NEO GEN
+                        <br>• General assistance
+                        <br><br>What can I help you with today?
+                    </div>
+                </div>
+            </div>
+            <div class="catbot-input">
+                <input type="text" id="catbotInput" placeholder="Type your message...">
+                <button class="catbot-send" id="catbotSend">➤</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Sticky Navbar Scroll Effect
+            const header = document.querySelector('header');
+            
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 100) {
+                    header.classList.add('scrolled');
+                } else {
+                    header.classList.remove('scrolled');
+                }
+            });
+
+            // Smooth scrolling for navigation links
+            const navLinks = document.querySelectorAll('nav a[href^="#"]');
+            navLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const targetId = link.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+                    
+                    if (targetElement) {
+                        const offsetTop = targetElement.offsetTop - 100; // Account for fixed header
+                        window.scrollTo({
+                            top: offsetTop,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+
+            // Hero Search Functionality
+            const heroSearchInput = document.getElementById('heroSearchInput');
+            const heroSearchBtn = document.getElementById('heroSearchBtn');
+
+            heroSearchBtn.addEventListener('click', () => {
+                const searchQuery = heroSearchInput.value.trim();
+                if (searchQuery) {
+                    // Scroll to find internships section
+                    const findSection = document.getElementById('findInternshipsSection');
+                    if (findSection) {
+                        const offsetTop = findSection.offsetTop - 100;
+                        window.scrollTo({
+                            top: offsetTop,
+                            behavior: 'smooth'
+                        });
+                        
+                        // Pre-fill the search in the form
+                        setTimeout(() => {
+                            const branchSelect = document.getElementById('branch');
+                            const cityInput = document.getElementById('city');
+                            
+                            // Simple keyword matching for demo
+                            if (searchQuery.toLowerCase().includes('computer') || searchQuery.toLowerCase().includes('it')) {
+                                branchSelect.value = 'computer';
+                            } else if (searchQuery.toLowerCase().includes('mechanical')) {
+                                branchSelect.value = 'mechanical';
+                            } else if (searchQuery.toLowerCase().includes('electrical')) {
+                                branchSelect.value = 'electrical';
+                            } else if (searchQuery.toLowerCase().includes('civil')) {
+                                branchSelect.value = 'civil';
+                            }
+                            
+                            // Check for location
+                            if (searchQuery.toLowerCase().includes('delhi')) {
+                                cityInput.value = 'New Delhi';
+                            } else if (searchQuery.toLowerCase().includes('mumbai')) {
+                                cityInput.value = 'Mumbai';
+                            } else if (searchQuery.toLowerCase().includes('bangalore')) {
+                                cityInput.value = 'Bangalore';
+                            }
+                        }, 1000);
+                    }
+                } else {
+                    alert('Please enter your skills, department, or location to search for internships!');
+                }
+            });
+
+            // Enter key support for hero search
+            heroSearchInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    heroSearchBtn.click();
+                }
+            });
+
+            // Auth Modal Functionality
+            const authModal = document.getElementById('authModal');
+            const authModalTitle = document.getElementById('authModalTitle');
+            const authForm = document.getElementById('authForm');
+            const confirmPasswordGroup = document.getElementById('confirmPasswordGroup');
+            const fullNameGroup = document.getElementById('fullNameGroup');
+            const authSwitchText = document.getElementById('authSwitchText');
+            const authSwitchLink = document.getElementById('authSwitchLink');
+            const loginBtn = document.getElementById('loginBtn');
+            const signupBtn = document.getElementById('signupBtn');
+            const closeAuthModal = document.getElementById('closeAuthModal');
+            const dashboardSection = document.getElementById('dashboardSection');
+            const userAvatar = document.getElementById('userAvatar');
+            const userName = document.getElementById('userName');
+            const userBranch = document.getElementById('userBranch');
+            const userLocation = document.getElementById('userLocation');
+            const googleSignupBtn = document.getElementById('googleSignupBtn');
+            
+            let isLoginMode = true;
+            
+            // Open auth modal
+            loginBtn.addEventListener('click', () => {
+                setAuthMode(true);
+                authModal.classList.add('active');
+            });
+            
+            signupBtn.addEventListener('click', () => {
+                setAuthMode(false);
+                authModal.classList.add('active');
+            });
+            
+            // Close auth modal
+            closeAuthModal.addEventListener('click', () => {
+                authModal.classList.remove('active');
+            });
+            
+            // Google sign-up functionality
+            googleSignupBtn.addEventListener('click', () => {
+                // Simulate Google OAuth (in real app, this would integrate with Google OAuth API)
+                const googleUser = {
+                    name: 'Google User',
+                    email: 'user@gmail.com',
+                    avatar: 'G'
+                };
+                
+                // Store user data
+                localStorage.setItem('userEmail', googleUser.email);
+                localStorage.setItem('userName', googleUser.name);
+                localStorage.setItem('userBranch', 'Computer Science');
+                localStorage.setItem('userLocation', 'New Delhi');
+                localStorage.setItem('isLoggedIn', 'true');
+                localStorage.setItem('authProvider', 'google');
+                
+                // Update dashboard
+                userAvatar.textContent = googleUser.avatar;
+                userName.textContent = googleUser.name;
+                
+                // Show dashboard and hide auth buttons
+                dashboardSection.classList.remove('hidden');
+                loginBtn.style.display = 'none';
+                signupBtn.style.display = 'none';
+                
+                // Close modal
+                authModal.classList.remove('active');
+                
+                alert('Successfully signed in with Google!');
+            });
+            
+            // Switch between login and signup
+            authSwitchLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                setAuthMode(!isLoginMode);
+            });
+            
+            function setAuthMode(loginMode) {
+                isLoginMode = loginMode;
+                
+                if (isLoginMode) {
+                    authModalTitle.textContent = 'Login to Your Account';
+                    confirmPasswordGroup.classList.add('hidden');
+                    fullNameGroup.classList.add('hidden');
+                    authSwitchText.textContent = "Don't have an account?";
+                    authSwitchLink.textContent = "Sign up";
+                } else {
+                    authModalTitle.textContent = 'Create an Account';
+                    confirmPasswordGroup.classList.remove('hidden');
+                    fullNameGroup.classList.remove('hidden');
+                    authSwitchText.textContent = "Already have an account?";
+                    authSwitchLink.textContent = "Login";
+                }
+            }
+            
+            // Handle form submission
+            authForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                
+                if (!isLoginMode) {
+                    const confirmPassword = document.getElementById('confirmPassword').value;
+                    const fullName = document.getElementById('fullName').value;
+                    
+                    if (password !== confirmPassword) {
+                        alert('Passwords do not match');
+                        return;
+                    }
+                    
+                    // Simulate user registration
+                    localStorage.setItem('userEmail', email);
+                    localStorage.setItem('userName', fullName);
+                    localStorage.setItem('userBranch', 'Computer Science'); // Default
+                    localStorage.setItem('userLocation', 'New Delhi'); // Default
+                    localStorage.setItem('isLoggedIn', 'true');
+                    
+                    // Update dashboard with user info
+                    userAvatar.textContent = fullName.split(' ').map(n => n[0]).join('').toUpperCase();
+                    userName.textContent = fullName;
+                    
+                    alert('Account created successfully!');
+                } else {
+                    // Simulate login (in a real app, this would verify credentials)
+                    const storedEmail = localStorage.getItem('userEmail');
+                    
+                    if (email === storedEmail) {
+                        localStorage.setItem('isLoggedIn', 'true');
+                        
+                        // Update dashboard with stored user info
+                        const storedName = localStorage.getItem('userName') || 'User';
+                        const storedBranch = localStorage.getItem('userBranch') || 'Not specified';
+                        const storedLocation = localStorage.getItem('userLocation') || 'Not specified';
+                        
+                        userAvatar.textContent = storedName.split(' ').map(n => n[0]).join('').toUpperCase();
+                        userName.textContent = storedName;
+                        userBranch.textContent = storedBranch;
+                        userLocation.textContent = storedLocation;
+                        
+                        alert('Login successful!');
+                    } else {
+                        alert('Invalid credentials. Please try again or sign up.');
+                        return;
+                    }
+                }
+                
+                // Show dashboard and hide auth buttons
+                dashboardSection.classList.remove('hidden');
+                loginBtn.style.display = 'none';
+                signupBtn.style.display = 'none';
+                
+                // Close modal
+                authModal.classList.remove('active');
+            });
+            
+            // Check if user is already logged in
+            if (localStorage.getItem('isLoggedIn') === 'true') {
+                const storedName = localStorage.getItem('userName') || 'User';
+                const storedBranch = localStorage.getItem('userBranch') || 'Not specified';
+                const storedLocation = localStorage.getItem('userLocation') || 'Not specified';
+                
+                userAvatar.textContent = storedName.split(' ').map(n => n[0]).join('').toUpperCase();
+                userName.textContent = storedName;
+                userBranch.textContent = storedBranch;
+                userLocation.textContent = storedLocation;
+                
+                dashboardSection.classList.remove('hidden');
+                loginBtn.style.display = 'none';
+                signupBtn.style.display = 'none';
+            }
+            
+            // File upload functionality
+            const resumeUpload = document.getElementById('resumeUpload');
+            const resumeFile = document.getElementById('resumeFile');
+            
+            resumeUpload.addEventListener('click', () => {
+                resumeFile.click();
+            });
+            
+            resumeFile.addEventListener('change', (e) => {
+                if (e.target.files.length > 0) {
+                    const fileName = e.target.files[0].name;
+                    const fileSize = (e.target.files[0].size / 1024 / 1024).toFixed(2);
+                    
+                    // Update upload area with file info
+                    resumeUpload.innerHTML = `
+                        <div class="file-upload-icon">✅</div>
+                        <h4>File Uploaded Successfully!</h4>
+                        <p><strong>${fileName}</strong></p>
+                        <p>Size: ${fileSize} MB</p>
+                        <p class="upload-hint">Click to change file</p>
+                    `;
+                }
+            });
+            
+            // Enhanced drag and drop for file upload
+            resumeUpload.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                resumeUpload.classList.add('dragover');
+            });
+            
+            resumeUpload.addEventListener('dragleave', (e) => {
+                e.preventDefault();
+                resumeUpload.classList.remove('dragover');
+            });
+            
+            resumeUpload.addEventListener('drop', (e) => {
+                e.preventDefault();
+                resumeUpload.classList.remove('dragover');
+                
+                if (e.dataTransfer.files.length > 0) {
+                    resumeFile.files = e.dataTransfer.files;
+                    const fileName = e.dataTransfer.files[0].name;
+                    const fileSize = (e.dataTransfer.files[0].size / 1024 / 1024).toFixed(2);
+                    
+                    // Update upload area with file info
+                    resumeUpload.innerHTML = `
+                        <div class="file-upload-icon">✅</div>
+                        <h4>File Uploaded Successfully!</h4>
+                        <p><strong>${fileName}</strong></p>
+                        <p>Size: ${fileSize} MB</p>
+                        <p class="upload-hint">Click to change file</p>
+                    `;
+                }
+            });
+            
+            // Internship form submission
+            const internshipForm = document.getElementById('internshipForm');
+            const resultsContainer = document.getElementById('resultsContainer');
+            
+            internshipForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                // Check if user is logged in
+                if (localStorage.getItem('isLoggedIn') !== 'true') {
+                    alert('Please login first to find internships');
+                    setAuthMode(true);
+                    authModal.classList.add('active');
+                    return;
+                }
+                
+                // Get form values
+                const branch = document.getElementById('branch').value;
+                const state = document.getElementById('state').value;
+                const city = document.getElementById('city').value;
+                
+                // Get selected skills
+                const selectedSkills = [];
+                document.querySelectorAll('input[type="checkbox"]:checked').forEach(checkbox => {
+                    selectedSkills.push(checkbox.value);
+                });
+                
+                // Update user profile with new preferences
+                if (branch) localStorage.setItem('userBranch', document.getElementById('branch').options[document.getElementById('branch').selectedIndex].text);
+                if (state || city) {
+                    let location = '';
+                    if (city) location += city + ', ';
+                    if (state && state !== 'any') location += document.getElementById('state').options[document.getElementById('state').selectedIndex].text;
+                    localStorage.setItem('userLocation', location);
+                    userLocation.textContent = location;
+                }
+                if (branch) userBranch.textContent = document.getElementById('branch').options[document.getElementById('branch').selectedIndex].text;
+                
+                // Simulate AI processing
+                setTimeout(() => {
+                    // Show results
+                    resultsContainer.classList.remove('hidden');
+                    
+                    // Generate sample internship results based on user input
+                    generateInternshipResults(branch, selectedSkills, state);
+                    
+                    // Scroll to results
+                    resultsContainer.scrollIntoView({ behavior: 'smooth' });
+                }, 1500);
+            });
+            
+            // Function to generate sample internship results
+            function generateInternshipResults(branch, skills, state) {
+                // Clear previous results
+                resultsContainer.innerHTML = '';
+                
+                // Sample internship data (in a real app, this would come from an API)
+                const internships = [
+                    {
+                        title: 'Software Development Intern',
+                        organization: 'Ministry of Electronics & IT',
+                        location: 'New Delhi',
+                        duration: '3 months',
+                        stipend: '₹20,000/month',
+                        skills: ['Programming', 'Web Development', 'Data Analysis'],
+                        imagePrompt: 'Government office building with technology theme',
+                        match: '95%'
+                    },
+                    {
+                        title: 'Data Analysis Intern',
+                        organization: 'NITI Aayog',
+                        location: 'New Delhi',
+                        duration: '6 months',
+                        stipend: '₹25,000/month',
+                        skills: ['Data Analysis', 'Research', 'Programming'],
+                        imagePrompt: 'Data visualization and analytics in government context',
+                        match: '88%'
+                    },
+                    {
+                        title: 'Policy Research Intern',
+                        organization: 'Ministry of Education',
+                        location: 'New Delhi',
+                        duration: '4 months',
+                        stipend: '₹18,000/month',
+                        skills: ['Research', 'Writing', 'Communication'],
+                        imagePrompt: 'Education policy research in government setting',
+                        match: '82%'
+                    },
+                    {
+                        title: 'Civil Engineering Intern',
+                        organization: 'Ministry of Road Transport',
+                        location: 'Mumbai',
+                        duration: '5 months',
+                        stipend: '₹22,000/month',
+                        skills: ['Design', 'Research'],
+                        imagePrompt: 'Civil engineering infrastructure project',
+                        match: '78%'
+                    },
+                    {
+                        title: 'Public Health Intern',
+                        organization: 'Ministry of Health',
+                        location: 'Bangalore',
+                        duration: '3 months',
+                        stipend: '₹15,000/month',
+                        skills: ['Research', 'Communication'],
+                        imagePrompt: 'Public health awareness campaign',
+                        match: '75%'
+                    },
+                    {
+                        title: 'Legal Research Intern',
+                        organization: 'Ministry of Law & Justice',
+                        location: 'Chennai',
+                        duration: '4 months',
+                        stipend: '₹20,000/month',
+                        skills: ['Research', 'Writing'],
+                        imagePrompt: 'Legal documents and law books in government office',
+                        match: '70%'
+                    }
+                ];
+                
+                // Filter internships based on user preferences (simulated AI matching)
+                const filteredInternships = internships.filter(internship => {
+                    // Simple matching algorithm based on skills and location
+                    let matchScore = 0;
+                    
+                    // Check skills match
+                    internship.skills.forEach(skill => {
+                        if (skills.includes(skill.toLowerCase().replace(' ', '-'))) {
+                            matchScore += 20;
+                        }
+                    });
+                    
+                    // Check location preference
+                    const userState = document.getElementById('state').options[document.getElementById('state').selectedIndex].text;
+                    if (userState === 'Any' || internship.location.includes(userState)) {
+                        matchScore += 30;
+                    }
+                    
+                    // Check branch preference
+                    const userBranch = document.getElementById('branch').options[document.getElementById('branch').selectedIndex].text;
+                    if (internship.title.toLowerCase().includes(userBranch.toLowerCase()) || 
+                        internship.organization.toLowerCase().includes(userBranch.toLowerCase())) {
+                        matchScore += 50;
+                    }
+                    
+                    internship.match = Math.min(matchScore, 95) + '%';
+                    return matchScore > 50; // Only show internships with >50% match
+                });
+                
+                // Sort by match score (highest first)
+                filteredInternships.sort((a, b) => {
+                    return parseInt(b.match) - parseInt(a.match);
+                });
+                
+                // Display results
+                if (filteredInternships.length === 0) {
+                    resultsContainer.innerHTML = `
+                        <div style="grid-column: 1 / -1; text-align: center; padding: 2rem;">
+                            <h3>No internships match your criteria</h3>
+                            <p>Try broadening your search by selecting more skills or choosing different locations.</p>
+                        </div>
+                    `;
+                } else {
+                    filteredInternships.forEach(internship => {
+                        const internshipEl = document.createElement('div');
+                        internshipEl.className = 'internship-card';
+                        internshipEl.innerHTML = `
+                            <div class="internship-image">
+                                <img src="https://placeholder-image-service.onrender.com/image/300x160?prompt=${encodeURIComponent(internship.imagePrompt)}&id=a2fdccac-11fc-44d3-a635-557d77afdc61" alt="${internship.imagePrompt}">
+                            </div>
+                            <div class="internship-content">
+                                <h3 class="internship-title">${internship.title}</h3>
+                                <div class="internship-org">${internship.organization}</div>
+                                <div class="internship-details">
+                                    <span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                            <circle cx="12" cy="10" r="3"></circle>
+                                        </svg>
+                                        ${internship.location}
+                                    </span>
+                                    <span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                            <line x1="16" y1="2" x2="16" y2="6"></line>
+                                            <line x1="8" y1="2" x2="8" y2="6"></line>
+                                            <line x1="3" y1="10" x2="21" y2="10"></line>
+                                        </svg>
+                                        ${internship.duration}
+                                    </span>
+                                </div>
+                                <div class="internship-tags">
+                                    ${internship.skills.map(skill => `<span class="tag">${skill}</span>`).join('')}
+                                    <span class="tag tag-primary">Match: ${internship.match}</span>
+                                </div>
+                                <p>Stipend: ${internship.stipend}</p>
+                                <button class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Apply Now</button>
+                            </div>
+                        `;
+                        resultsContainer.appendChild(internshipEl);
+                    });
+                }
+            }
+            
+            // Find internships button in dashboard
+            document.getElementById('findInternshipsBtn').addEventListener('click', () => {
+                document.getElementById('findInternshipsSection').scrollIntoView({ behavior: 'smooth' });
+            });
+
+            // Resources functionality
+            const resourceButtons = document.querySelectorAll('.resource-card .btn');
+            resourceButtons.forEach(button => {
+                button.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const card = e.target.closest('.resource-card');
+                    const title = card.querySelector('h3').textContent;
+                    
+                    // Simulate opening resource content
+                    alert(`Opening ${title}...\n\nThis would typically open a detailed guide, PDF, or interactive content.`);
+                });
+            });
+
+            // Quick links functionality
+            const quickLinks = document.querySelectorAll('.quick-link');
+            quickLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const linkText = link.querySelector('span:last-child').textContent;
+                    alert(`Opening ${linkText}...\n\nThis would typically navigate to the respective page or open a modal with relevant content.`);
+                });
+            });
+
+            // Notifications functionality
+            const readMoreBtns = document.querySelectorAll('.read-more-btn');
+            readMoreBtns.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const notification = e.target.closest('.notification-item');
+                    const title = notification.querySelector('.notification-title').textContent;
+                    alert(`Opening detailed view for: ${title}\n\nThis would typically open a modal or navigate to a detailed notification page.`);
+                });
+            });
+
+            // Countdown timers
+            function updateCountdown() {
+                const now = new Date().getTime();
+                
+                // Timer 1: 2 days from now
+                const deadline1 = new Date();
+                deadline1.setDate(deadline1.getDate() + 2);
+                const timer1 = document.getElementById('timer1');
+                if (timer1) {
+                    const timeLeft1 = deadline1.getTime() - now;
+                    const days1 = Math.floor(timeLeft1 / (1000 * 60 * 60 * 24));
+                    const hours1 = Math.floor((timeLeft1 % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    
+                    if (timeLeft1 > 0) {
+                        timer1.textContent = `${days1}d ${hours1}h left`;
+                    } else {
+                        timer1.textContent = 'Expired';
+                    }
+                }
+
+                // Timer 2: 1 day from now
+                const deadline2 = new Date();
+                deadline2.setDate(deadline2.getDate() + 1);
+                const timer2 = document.getElementById('timer2');
+                if (timer2) {
+                    const timeLeft2 = deadline2.getTime() - now;
+                    const days2 = Math.floor(timeLeft2 / (1000 * 60 * 60 * 24));
+                    const hours2 = Math.floor((timeLeft2 % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const minutes2 = Math.floor((timeLeft2 % (1000 * 60 * 60)) / (1000 * 60));
+                    
+                    if (timeLeft2 > 0) {
+                        if (days2 > 0) {
+                            timer2.textContent = `${days2}d ${hours2}h left`;
+                        } else {
+                            timer2.textContent = `${hours2}h ${minutes2}m left`;
+                        }
+                    } else {
+                        timer2.textContent = 'Expired';
+                    }
+                }
+            }
+
+            // Update countdown every minute
+            updateCountdown();
+            setInterval(updateCountdown, 60000);
+
+            // Dark Mode Toggle
+            const darkModeToggle = document.getElementById('darkModeToggle');
+            const body = document.body;
+            
+            // Check for saved theme preference
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            body.setAttribute('data-theme', savedTheme);
+            darkModeToggle.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+            
+            darkModeToggle.addEventListener('click', () => {
+                const currentTheme = body.getAttribute('data-theme');
+                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                
+                body.setAttribute('data-theme', newTheme);
+                darkModeToggle.textContent = newTheme === 'dark' ? '☀️' : '🌙';
+                localStorage.setItem('theme', newTheme);
+            });
+
+            // Search and Filter Functionality
+            const internshipSearch = document.getElementById('internshipSearch');
+            const searchBtn = document.getElementById('searchBtn');
+            const locationFilter = document.getElementById('locationFilter');
+            const durationFilter = document.getElementById('durationFilter');
+            const typeFilter = document.getElementById('typeFilter');
+            const stipendFilter = document.getElementById('stipendFilter');
+
+            function filterInternships() {
+                const searchTerm = internshipSearch.value.toLowerCase();
+                const location = locationFilter.value;
+                const duration = durationFilter.value;
+                const type = typeFilter.value;
+                const stipend = stipendFilter.value;
+
+                // This would typically filter the actual internship data
+                console.log('Filtering internships:', { searchTerm, location, duration, type, stipend });
+                alert(`Filtering internships with:\nSearch: ${searchTerm}\nLocation: ${location}\nDuration: ${duration}\nType: ${type}\nStipend: ${stipend}`);
+            }
+
+            searchBtn.addEventListener('click', filterInternships);
+            [locationFilter, durationFilter, typeFilter, stipendFilter].forEach(filter => {
+                filter.addEventListener('change', filterInternships);
+            });
+
+            // Testimonials Slider
+            const testimonialsContainer = document.getElementById('testimonialsContainer');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            let currentSlide = 0;
+            const totalSlides = testimonialsContainer.children.length;
+
+            function updateSlider() {
+                const translateX = -currentSlide * 100;
+                testimonialsContainer.style.transform = `translateX(${translateX}%)`;
+            }
+
+            nextBtn.addEventListener('click', () => {
+                currentSlide = (currentSlide + 1) % totalSlides;
+                updateSlider();
+            });
+
+            prevBtn.addEventListener('click', () => {
+                currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+                updateSlider();
+            });
+
+            // Auto-scroll testimonials
+            setInterval(() => {
+                currentSlide = (currentSlide + 1) % totalSlides;
+                updateSlider();
+            }, 5000);
+
+            // Contact Form
+            const contactForm = document.getElementById('contactForm');
+            contactForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                const name = document.getElementById('contactName').value;
+                const email = document.getElementById('contactEmail').value;
+                const subject = document.getElementById('contactSubject').value;
+                const message = document.getElementById('contactMessage').value;
+                
+                alert(`Thank you for your message, ${name}!\n\nWe'll get back to you at ${email} regarding "${subject}".`);
+                contactForm.reset();
+            });
+
+            // Catbot Functionality
+            const catbotToggle = document.getElementById('catbotToggle');
+            const catbotWindow = document.getElementById('catbotWindow');
+            const catbotClose = document.getElementById('catbotClose');
+            const catbotMessages = document.getElementById('catbotMessages');
+            const catbotInput = document.getElementById('catbotInput');
+            const catbotSend = document.getElementById('catbotSend');
+
+            let isCatbotOpen = false;
+
+            // Toggle catbot window
+            catbotToggle.addEventListener('click', () => {
+                isCatbotOpen = !isCatbotOpen;
+                catbotWindow.classList.toggle('active', isCatbotOpen);
+                if (isCatbotOpen) {
+                    catbotInput.focus();
+                }
+            });
+
+            // Close catbot window
+            catbotClose.addEventListener('click', () => {
+                isCatbotOpen = false;
+                catbotWindow.classList.remove('active');
+            });
+
+            // Send message
+            function sendMessage() {
+                const message = catbotInput.value.trim();
+                if (message === '') return;
+
+                // Add user message
+                addMessage(message, 'user');
+                catbotInput.value = '';
+
+                // Show typing indicator
+                showTypingIndicator();
+
+                // Simulate bot response
+                setTimeout(() => {
+                    hideTypingIndicator();
+                    const response = getBotResponse(message);
+                    addMessage(response, 'bot');
+                }, 1000 + Math.random() * 1000);
+            }
+
+            // Send button click
+            catbotSend.addEventListener('click', sendMessage);
+
+            // Enter key press
+            catbotInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    sendMessage();
+                }
+            });
+
+            // Add message to chat
+            function addMessage(text, sender) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${sender}`;
+                
+                const avatar = document.createElement('div');
+                avatar.className = 'message-avatar';
+                avatar.textContent = sender === 'bot' ? '🐱' : '👤';
+                
+                const content = document.createElement('div');
+                content.className = 'message-content';
+                content.innerHTML = text.replace(/\n/g, '<br>');
+                
+                messageDiv.appendChild(avatar);
+                messageDiv.appendChild(content);
+                catbotMessages.appendChild(messageDiv);
+                
+                // Scroll to bottom
+                catbotMessages.scrollTop = catbotMessages.scrollHeight;
+            }
+
+            // Show typing indicator
+            function showTypingIndicator() {
+                const typingDiv = document.createElement('div');
+                typingDiv.className = 'message bot';
+                typingDiv.id = 'typingIndicator';
+                
+                const avatar = document.createElement('div');
+                avatar.className = 'message-avatar';
+                avatar.textContent = '🐱';
+                
+                const content = document.createElement('div');
+                content.className = 'typing-indicator';
+                content.innerHTML = '<div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>';
+                
+                typingDiv.appendChild(avatar);
+                typingDiv.appendChild(content);
+                catbotMessages.appendChild(typingDiv);
+                catbotMessages.scrollTop = catbotMessages.scrollHeight;
+            }
+
+            // Hide typing indicator
+            function hideTypingIndicator() {
+                const typingIndicator = document.getElementById('typingIndicator');
+                if (typingIndicator) {
+                    typingIndicator.remove();
+                }
+            }
+
+            // Get bot response
+            function getBotResponse(message) {
+                const lowerMessage = message.toLowerCase();
+                
+                // Greeting responses
+                if (lowerMessage.includes('hello') || lowerMessage.includes('hi') || lowerMessage.includes('hey')) {
+                    return 'Meow! Hello there! 🐾 How can I help you today?';
+                }
+                
+                // Internship related
+                if (lowerMessage.includes('internship') || lowerMessage.includes('job') || lowerMessage.includes('career')) {
+                    return 'Great question! NEO GEN helps you find the perfect government internships! 🎯<br><br>You can:<br>• Browse available internships<br>• Get AI-powered matches<br>• Apply directly through our platform<br><br>Would you like me to help you find internships?';
+                }
+                
+                // About NEO GEN
+                if (lowerMessage.includes('neo gen') || lowerMessage.includes('about') || lowerMessage.includes('what is')) {
+                    return 'NEO GEN is your AI-powered government internship portal! 🚀<br><br>We help students find the perfect government internships using advanced AI matching technology. Our platform connects you with opportunities across various ministries and departments.';
+                }
+                
+                // Help
+                if (lowerMessage.includes('help') || lowerMessage.includes('support')) {
+                    return 'I\'m here to help! 🐱<br><br>I can assist you with:<br>• Finding internships<br>• Understanding NEO GEN features<br>• General questions<br>• Technical support<br><br>What specific help do you need?';
+                }
+                
+                // Contact
+                if (lowerMessage.includes('contact') || lowerMessage.includes('reach')) {
+                    return 'You can reach us through:<br>📧 Email: support@neogen.com<br>📞 Phone: +91-XXXX-XXXX<br>💬 This chat (I\'m always here!)<br><br>Is there something specific you\'d like to discuss?';
+                }
+                
+                // Thank you
+                if (lowerMessage.includes('thank') || lowerMessage.includes('thanks')) {
+                    return 'You\'re very welcome! 😸 I\'m always happy to help! Is there anything else you\'d like to know?';
+                }
+                
+                // Default responses
+                const defaultResponses = [
+                    'That\'s interesting! Tell me more about what you\'re looking for. 🐱',
+                    'I\'d be happy to help with that! Can you provide more details? 🐾',
+                    'Meow! I understand you\'re asking about that. Let me help you find the right information! 🐱',
+                    'Great question! I\'m here to assist you. What specific information do you need? 🐾',
+                    'I\'m listening! Please share more details so I can help you better. 🐱'
+                ];
+                
+                return defaultResponses[Math.floor(Math.random() * defaultResponses.length)];
+            }
+        });
+    </script>
+</body>
+</html>
